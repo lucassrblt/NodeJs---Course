@@ -7,15 +7,15 @@ const blogSchema = new mongoose.Schema({
   },
   author: {
     type: String,
-    required: true,
+    required: false,
   },
 
   subject: {
     type: String,
-    required: true,
+    required: false,
   },
 });
 
-const user = mongoose.model("blog", blogSchema);
+const blog = mongoose.model("blog", blogSchema);
 
-module.exports = user;
+module.exports = blog;
