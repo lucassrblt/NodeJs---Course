@@ -1,5 +1,7 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import sendData from "../functions/sendData.js";
 
 export default function Register() {
@@ -7,7 +9,9 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (email && password && confirmPassword) {
       if (password === confirmPassword) {
@@ -16,7 +20,15 @@ export default function Register() {
           email: email,
           password: password,
         };
-        sendData(data, "http://localhost:3001/api/register");
+        const response = await sendData(
+          data,
+          "http://localhost:3001/api/register"
+        );
+
+        const userData = await response.data;
+        localStorage.setItem("userData", JSON.stringify(userData));
+        console.log(response);
+        navigate("/otp-verification");
       }
     }
   };

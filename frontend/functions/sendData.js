@@ -14,7 +14,7 @@ const sendData = async (data, url) => {
     }
 
     const responseServer = await response.json();
-    console.log(responseServer);
+    return responseServer;
   } catch (error) {
     console.log(error);
   }

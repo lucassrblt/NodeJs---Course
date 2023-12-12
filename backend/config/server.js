@@ -5,8 +5,6 @@ const app = require("../index");
 const http = require("http");
 const PORT = 3001;
 
-const server = http.createServer(app);
-
 // // Création du server avec la méthode createServer du module http
 // const app = http.createServer((req, res) => {
 //   // Spécifie que tout va bein au client
@@ -19,6 +17,6 @@ const server = http.createServer(app);
 // });
 
 //Spécifie sur quel port le server va écouter
-server.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

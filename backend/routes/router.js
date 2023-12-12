@@ -9,5 +9,7 @@ router.get("/api", function (req, res, next) {
 
 router.post("/createArticle", blogController.createArticle);
 router.post("/register", authController.register);
+router.post("/checkOTP", authController.verifyOTP);
+router.post("/login", authController.login);
 
 module.exports = router;
