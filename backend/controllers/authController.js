@@ -2,7 +2,6 @@ const user = require("../models/user");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
-const userOTPVerification = require("../models/userOTPVerification");
 
 dotenv.config();
 
@@ -32,34 +31,22 @@ module.exports.register = async (req, res) => {
     });
 
     const userSaved = await newUser.save();
-    sendOTPVerfificationEmail(userSaved, res);
+    VerfificationEmail(userSaved, res);
   } catch (error) {
     console.log(error);
   }
 };
 
-const sendOTPVerfificationEmail = async ({ _id, email }, res) => {
+const VerfificationEmail = async ({ _id, email }, res) => {
   try {
-    const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
-
     const mailOptions = {
       from: process.env.EMAIL,
       to: email,
       subject: "Email verification",
-      html: `<p>Enter <b>${otp}</b> in the app to verify your email adress</p>`,
+      // html: `<p>Enter <b>${otp}</b> in the app to verify your email adress</p>`,
+      html: `Please verify your email adress by visit this link : <a href="http://localhost:5173/verify/${_id}">http://localhost:3000/verify/${_id}</a>`,
     };
 
-    const saltRounds = 10;
-
-    const hashedOtp = await bcrypt.hash(otp, saltRounds);
-
-    const newOTPVerification = new userOTPVerification({
-      userId: _id,
-      OTP: hashedOtp,
-      createdAt: Date.now(),
-      expiresAt: Date.now() + 360000 * 10, // 1 hour
-    });
-    await newOTPVerification.save();
     await transporter.sendMail(mailOptions);
     res.json({
       status: "PENDING",
@@ -81,34 +68,16 @@ const sendOTPVerfificationEmail = async ({ _id, email }, res) => {
   }
 };
 
-module.exports.verifyOTP = async (req, res) => {
+module.exports.verifyEmail = async (req, res) => {
   try {
-    const { id, code } = req.body;
-    if (!id || !code) {
+    const { id } = req.body;
+    if (!id) {
       return res.status(400).json({ error: "Tous les champs sont requis." });
     }
-
-    const otpVerification = await userOTPVerification.findOne({ userId: id });
-    if (!otpVerification) {
-      return res
-        .status(400)
-        .json({ error: "Not registred or already verified" });
-    }
-
-    const isExpired = Date.now() > otpVerification.expiresAt;
-    if (isExpired) {
-      return res.status(400).json({ error: "OTP expired" });
-    }
-
-    const isMatch = bcrypt.compare(code, otpVerification.OTP);
-    if (!isMatch) {
-      return res.status(400).json({ error: "OTP doesn't match" });
-    }
-
     await user.findByIdAndUpdate(id, { verified: true });
     res.json({
       status: "SUCCESS",
-      message: "OTP verified",
+      message: "Email verified",
       data: {
         userId: id,
       },

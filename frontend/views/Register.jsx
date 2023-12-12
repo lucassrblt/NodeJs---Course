@@ -28,7 +28,7 @@ export default function Register() {
         const userData = await response.data;
         localStorage.setItem("userData", JSON.stringify(userData));
         console.log(response);
-        navigate("/otp-verification");
+        navigate("/login");
       }
     }
   };

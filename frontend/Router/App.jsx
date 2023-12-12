@@ -5,6 +5,7 @@ import Home from "../views/Home.jsx";
 import Register from "../views/Register.jsx";
 import OTPVerification from "../views/OTPVerification.jsx";
 import Login from "../views/Login.jsx";
+import Verify from "../views/Verify.jsx";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path={"/register"} element={<Register />} />
           <Route path={"/otp-verification"} element={<OTPVerification />} />
           <Route path={"/login"} element={<Login />} />
+          <Route path={"/verify/:id"} element={<Verify />} />
         </Routes>
       </BrowserRouter>
     </>
