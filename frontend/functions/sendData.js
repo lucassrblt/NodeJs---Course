@@ -6,7 +6,6 @@ const sendData = async (data, url) => {
   };
 
   try {
-    console.log(requestOptions.body);
     const response = await fetch(url, requestOptions);
 
     if (!response.ok) {
@@ -14,6 +13,7 @@ const sendData = async (data, url) => {
     }
 
     const responseServer = await response.json();
+    console.log(responseServer);
     return responseServer;
   } catch (error) {
     console.log(error);

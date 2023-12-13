@@ -8,6 +8,10 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [allInputAreFilled, setAllInputAreFilled] = useState(true);
+  const [passwordsDifferent, setPasswordDifferent] = useState(false);
+  const [emailAlreadyExists, setEmailAlreadyExists] = useState(false);
+  const [internalError, setInternalError] = useState(false);
 
   const navigate = useNavigate();
 
@@ -25,16 +29,33 @@ export default function Register() {
           "http://localhost:3001/api/register"
         );
 
-        const userData = await response.data;
-        localStorage.setItem("userData", JSON.stringify(userData));
-        console.log(response);
-        navigate("/login");
+        const userData = await response;
+        console.log(userData);
+
+        if (userData.status === "PENDING") {
+          localStorage.setItem("userData", JSON.stringify(userData));
+          navigate("/login");
+        }
+
+        if (userData.status === "FAILED") {
+          if (userData.message === "Please fill all files") {
+            setAllInputAreFilled(false);
+          } else if (userData.message === "Email already exist") {
+            setEmailAlreadyExists(true);
+          } else if (userData.message === "Verification email failed to sent") {
+            setInternalError(true);
+          }
+        }
+      } else {
+        setPasswordDifferent(true);
       }
+    } else {
+      setAllInputAreFilled(false);
     }
   };
   return (
     <div>
-      <h1>Resgitser</h1>
+      <h1>Register</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="email">
           Email
@@ -55,6 +76,14 @@ export default function Register() {
           />
         </label>
         <input type="submit" />
+        {!allInputAreFilled && <p>Please fill all fields</p>}
+        {passwordsDifferent && (
+          <p>Passwords are different, please set exacts passwords</p>
+        )}
+        {emailAlreadyExists && <p>Email already exists</p>}
+        {internalError && (
+          <p>Internal error, please try again later or contact support</p>
+        )}
       </form>
     </div>
   );

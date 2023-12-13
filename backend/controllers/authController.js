@@ -2,6 +2,7 @@ const user = require("../models/user");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
+const jwt = require("jsonwebtoken");
 
 dotenv.config();
 
@@ -19,18 +20,32 @@ const transporter = nodemailer.createTransport({
 module.exports.register = async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    // Check if email and password are not null
     if (!email || !password) {
-      return res.status(400).json({ error: "Tous les champs sont requis." });
+      return res.json({ status: "FAILED", message: "Please fill all files" });
     }
 
+    // Check if email already exist
+    const isMailExist = await user.find({ email: email });
+    if (isMailExist) {
+      return res.json({ status: "FAILED", message: "Email already exist" });
+    }
+
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new user
     const newUser = new user({
       email: email,
       password: hashedPassword,
       verified: false,
     });
 
+    //Save user un bdd
     const userSaved = await newUser.save();
+
+    // Send verification email
     VerfificationEmail(userSaved, res);
   } catch (error) {
     console.log(error);
@@ -39,15 +54,18 @@ module.exports.register = async (req, res) => {
 
 const VerfificationEmail = async ({ _id, email }, res) => {
   try {
+    // Create mail to send
     const mailOptions = {
       from: process.env.EMAIL,
       to: email,
       subject: "Email verification",
       // html: `<p>Enter <b>${otp}</b> in the app to verify your email adress</p>`,
-      html: `Please verify your email adress by visit this link : <a href="http://localhost:5173/verify/${_id}">http://localhost:3000/verify/${_id}</a>`,
+      html: `Please verify your email adress by visit this link : <a href="http://localhost:5173/verify/${_id}">Link</a>`,
     };
 
+    // Send mail
     await transporter.sendMail(mailOptions);
+    // Response if mail is sent
     res.json({
       status: "PENDING",
       message: "verification email sent",
@@ -57,9 +75,10 @@ const VerfificationEmail = async ({ _id, email }, res) => {
       },
     });
   } catch (error) {
+    // Response if mail is not sent
     res.json({
       status: "FAILED",
-      message: "verification email failed to send",
+      message: "Verification email failed to send",
       data: {
         userId: _id,
         email: email,
@@ -95,24 +114,59 @@ module.exports.login = async (req, res) => {
     }
 
     const userCollection = await user.findOne({ email: email });
+    console.log(userCollection);
 
     if (!userCollection) {
-      return res.json({ status: "FAILED", error: "Email not found" });
+      return res.json({ status: "FAILED", message: "Email not found" });
     }
 
     const isMatch = await bcrypt.compare(password, userCollection.password);
     if (!isMatch) {
-      return res.json({ status: "FAILED", error: "Password Invalid" });
+      return res.json({ status: "FAILED", message: "Password Invalid" });
     }
 
     if (!userCollection.verified) {
-      return res.json({ status: "FAILED", error: "Email not verified" });
+      return res.json({ status: "FAILED", message: "Email not verified" });
     }
+
+    // Create jwt
+
+    const token = jwt.sign(
+      {
+        id: userCollection._id,
+        email: userCollection.email,
+        password: userCollection.password,
+        verified: userCollection.verified,
+      },
+      process.env.SECRET_KEY,
+      { expiresIn: 60 * 60 }
+    );
+
+    res.cookie("token", token);
 
     // Envoyer json web token
     res.json({
       status: "SUCCESS",
       message: "Login successfully",
     });
-  } catch (error) {}
+  } catch (error) {
+    res
+      .status(500)
+      .json({ status: "FAILED", message: "Internal Server Error" });
+  }
+};
+
+module.exports.verifyAuthent = async (req, res) => {
+  const { token } = req.body;
+  if (!token) {
+    return res.json({ status: "FAILED", message: "Token not found" });
+  }
+
+  try {
+    const user = jwt.verify(token, process.env.SECRET_KEY);
+
+    return res.json({ status: "SUCCESS", message: "Token valid", data: user });
+  } catch (error) {
+    return res.json({ status: "FAILED", message: "Token not valid" });
+  }
 };
