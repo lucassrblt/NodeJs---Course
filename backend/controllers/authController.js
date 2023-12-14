@@ -4,6 +4,11 @@ const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 const jwt = require("jsonwebtoken");
 
+//Create json web token
+const createToken = (_id) => {
+  return jwt.sign({ _id }, process.env.SECRET_KEY, { expiresIn: "2h" });
+};
+
 dotenv.config();
 
 // create reusable transporter object using the default SMTP transport
@@ -131,42 +136,21 @@ module.exports.login = async (req, res) => {
 
     // Create jwt
 
-    const token = jwt.sign(
-      {
-        id: userCollection._id,
-        email: userCollection.email,
-        password: userCollection.password,
-        verified: userCollection.verified,
-      },
-      process.env.SECRET_KEY,
-      { expiresIn: 60 * 60 }
-    );
+    const token = createToken(userCollection._id);
 
-    res.cookie("token", token);
-
-    // Envoyer json web token
+    // Response + jsonWebToken
     res.json({
       status: "SUCCESS",
       message: "Login successfully",
+      user: {
+        _id: userCollection._id,
+        email: userCollection.email,
+        token: token,
+      },
     });
   } catch (error) {
     res
       .status(500)
       .json({ status: "FAILED", message: "Internal Server Error" });
-  }
-};
-
-module.exports.verifyAuthent = async (req, res) => {
-  const { token } = req.body;
-  if (!token) {
-    return res.json({ status: "FAILED", message: "Token not found" });
-  }
-
-  try {
-    const user = jwt.verify(token, process.env.SECRET_KEY);
-
-    return res.json({ status: "SUCCESS", message: "Token valid", data: user });
-  } catch (error) {
-    return res.json({ status: "FAILED", message: "Token not valid" });
   }
 };

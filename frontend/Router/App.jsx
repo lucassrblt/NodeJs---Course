@@ -6,19 +6,22 @@ import Register from "../views/Register.jsx";
 import Login from "../views/Login.jsx";
 import Verify from "../views/Verify.jsx";
 import { AuthContextProvider } from "../context/AuthContext.jsx";
+import PrivateRoute from "../views/PrivateRoute.jsx";
 
 function App() {
   return (
     <>
       <BrowserRouter>
-        <Routes>
-          <AuthContextProvider>
-            <Route path={"/home"} element={<Home />} />
+        <AuthContextProvider>
+          <Routes>
             <Route path={"/register"} element={<Register />} />
             <Route path={"/login"} element={<Login />} />
             <Route path={"/verify/:id"} element={<Verify />} />
-          </AuthContextProvider>
-        </Routes>
+            <Route element={<PrivateRoute />}>
+              <Route path={"/home"} element={<Home />} />
+            </Route>
+          </Routes>
+        </AuthContextProvider>
       </BrowserRouter>
     </>
   );

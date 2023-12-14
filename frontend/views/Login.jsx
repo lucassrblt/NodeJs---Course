@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
 import sendData from "../functions/sendData";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -10,6 +11,7 @@ export default function Login() {
   const [emailNotFound, setEmailNotFound] = useState(false);
   const [passwordInvalid, setPasswordInvalid] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(true);
+  const { dispatch } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -36,6 +38,8 @@ export default function Login() {
         }
       }
       if (response.status === "SUCCESS") {
+        localStorage.setItem("user", JSON.stringify(response.user));
+        dispatch({ type: "LOGIN", payload: response.user });
         navigate("/home");
       }
     } else {
