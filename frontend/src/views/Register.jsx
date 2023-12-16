@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import sendData from "../functions/sendData.js";
 import Form from "../components/Form.jsx";
-import googleBtn from "../components/googleBtn.jsx";
+import GoogleBtn from "../components/GoogleBtn.jsx";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -92,7 +92,9 @@ export default function Register() {
             <div className="line"></div>
           </div>
         </div>
-        <googleBtn />
+        <div className="google-btn-container">
+          <GoogleBtn />
+        </div>
       </div>
       {/* <h1>Register</h1>
       <form onSubmit={handleSubmit}>
@@ -124,6 +126,15 @@ export default function Register() {
           <p>Internal error, please try again later or contact support</p>
         )}
       </form> */}
+      <div className="other">
+        <div className="terms">
+          <p>Terms of use</p>
+        </div>
+        <div className="line"></div>
+        <div className="policy">
+          <p>Privacy policy</p>
+        </div>
+      </div>
     </div>
   );
 }

@@ -3,13 +3,15 @@ import React from "react";
 export default function Form({ fields, handleSubmit, page }) {
   return (
     <>
-      <form action="">
+      <form action="" className="form">
         {fields.map((field) => {
           return (
-            <label htmlFor="" className="label">
-              {field.label}
+            <div className="label-input-container">
+              <label htmlFor="" className="label">
+                {field.label}
+              </label>
               <input type={field.type} placeholder={field.placeholder} />
-            </label>
+            </div>
           );
         })}
         <div className="links">

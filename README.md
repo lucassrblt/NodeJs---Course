@@ -14,10 +14,11 @@
 - Email introuvable
 - Mot de passe erroné
 - Adresse email non vérifié
+- Possibilté de se connecter avec le système d'authentification de Google
+- JWT envoyer lors du login
 
 ### A ajouter
 
-- JWT
-- Protection des routes utilisables uniquement avec connexion
-- Traiter les différentes erreurs renvoyer par le back
-- Ajouter les pages 404
+- Réaliser styles des pages
+- Fixer la page register
+- Ajouter mixins scss
