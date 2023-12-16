@@ -3,6 +3,7 @@ import { useState } from "react";
 import sendData from "../functions/sendData";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import { useGoogleLogin } from "@react-oauth/google";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -14,6 +15,33 @@ export default function Login() {
   const { dispatch } = useContext(AuthContext);
 
   const navigate = useNavigate();
+
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => googleLoginSuccess(codeResponse),
+    onFailure: (res) => {
+      googleLoginFailure(res);
+    },
+  });
+
+  const googleLoginSuccess = async (response) => {
+    try {
+      const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+        headers: {
+          Authorization: `Bearer ${response.access_token}`,
+        },
+      });
+      const data = await res.json();
+      localStorage.setItem("user", JSON.stringify(data));
+      dispatch({ type: "LOGIN", payload: data });
+      navigate("/home");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const googleLoginFailure = (response) => {
+    console.log("Login failed res : ", response);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,6 +86,9 @@ export default function Login() {
         <input type="password" onChange={(e) => setPassword(e.target.value)} />
         <input type="submit" />
       </form>
+      <div className="google-login">
+        <button onClick={() => login()}>Sign in with google</button>
+      </div>
       {!allInputAreFilled && <h1>Please fill all fields</h1>}
       {emailNotFound && <h1>Email not found</h1>}
       {passwordInvalid && <h1>Password invalid</h1>}

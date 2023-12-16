@@ -1,0 +1,42 @@
+.view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.register-container {
+  padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  border: $border-form 3px solid;
+  border-radius: 18px;
+}
+
+.title-subtitle {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.title,
+.subtitle {
+  width: 100%;
+
+  h2 {
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: $main-black;
+  }
+
+  h6 {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    color: $secondary-black;
+  }
+}

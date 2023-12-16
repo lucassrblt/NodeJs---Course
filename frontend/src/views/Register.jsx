@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import sendData from "../functions/sendData.js";
+import Form from "../components/Form.jsx";
+import googleBtn from "../components/googleBtn.jsx";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -14,6 +16,24 @@ export default function Register() {
   const [internalError, setInternalError] = useState(false);
 
   const navigate = useNavigate();
+
+  const fields = [
+    {
+      label: "Email",
+      type: "email",
+      placeholder: "Enter your email",
+    },
+    {
+      label: "Password",
+      type: "password",
+      placeholder: "Enter your password",
+    },
+    {
+      label: "Confirm Password",
+      type: "password",
+      placeholder: "Confirm your password",
+    },
+  ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,8 +74,27 @@ export default function Register() {
     }
   };
   return (
-    <div>
-      <h1>Register</h1>
+    <div className="view">
+      <div className="register-container">
+        <div className="title-subtitle">
+          <div className="title">
+            <h2>Sign In</h2>
+          </div>
+          <div className="subtitle">
+            <h6>You will fill your profile later</h6>
+          </div>
+        </div>
+        <div className="form-container">
+          <Form fields={fields} handleSubmit={handleSubmit} page={"Register"} />
+          <div className="or">
+            <div className="line"></div>
+            <p>OR</p>
+            <div className="line"></div>
+          </div>
+        </div>
+        <googleBtn />
+      </div>
+      {/* <h1>Register</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="email">
           Email
@@ -84,7 +123,7 @@ export default function Register() {
         {internalError && (
           <p>Internal error, please try again later or contact support</p>
         )}
-      </form>
+      </form> */}
     </div>
   );
 }

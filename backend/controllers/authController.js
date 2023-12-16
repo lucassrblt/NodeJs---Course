@@ -51,9 +51,28 @@ module.exports.register = async (req, res) => {
     const userSaved = await newUser.save();
 
     // Send verification email
-    VerfificationEmail(userSaved, res);
+    if (newUser.verified === false) {
+      VerfificationEmail(userSaved, res);
+    }
   } catch (error) {
     console.log(error);
+  }
+};
+
+module.exports.registerWithGoogle = async (req, res) => {
+  try {
+    const { email, verified, password, profile } = req.body;
+    if ((!email || !profile, !verified || !password)) {
+      return res.json({ status: "FAILED", error: "Error about send data" });
+    }
+
+    const newUser = new user({ email, password, verified, profile });
+    const userSaved = await newUser.save();
+    if (userSaved) {
+      return res.json({ status: "SUCCESS", message: "User saved" });
+    }
+  } catch (error) {
+    console.log("Error about register with google", error);
   }
 };
 

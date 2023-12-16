@@ -9,9 +9,10 @@ router.get("/api", function (req, res, next) {
 
 router.post("/createArticle", blogController.createArticle);
 router.post("/register", authController.register);
+router.post("/registerWithGoogle", authController.registerWithGoogle);
 router.post("/verify", authController.verifyEmail);
 router.post("/login", authController.login);
 
-router.post("/verifyAuthent", authController.verifyAuthent);
+router.post("/verifyAuthent", authController.verifyEmail);
 
 module.exports = router;
