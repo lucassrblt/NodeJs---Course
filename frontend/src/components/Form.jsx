@@ -1,16 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 
-export default function Form({ fields, handleSubmit, page }) {
+export default function Form({ fields, onSubmit, page }) {
+  const [data, setData] = useState("");
+
+  const handleChange = (key, value) => {
+    setData({ ...data, [key]: value });
+  };
+
+  const SubmitForm = (e) => {
+    e.preventDefault();
+    onSubmit(data);
+  };
+
   return (
     <>
-      <form action="" className="form">
-        {fields.map((field) => {
+      <form onSubmit={SubmitForm} className="form">
+        {fields.map((field, index) => {
           return (
-            <div className="label-input-container">
+            <div className="label-input-container" key={index}>
               <label htmlFor="" className="label">
                 {field.label}
               </label>
-              <input type={field.type} placeholder={field.placeholder} />
+              <input
+                type={field.type}
+                placeholder={field.placeholder}
+                onChange={(e) => handleChange(field.label, e.target.value)}
+              />
             </div>
           );
         })}

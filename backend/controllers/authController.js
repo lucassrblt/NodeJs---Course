@@ -33,8 +33,12 @@ module.exports.register = async (req, res) => {
 
     // Check if email already exist
     const isMailExist = await user.find({ email: email });
-    if (isMailExist) {
-      return res.json({ status: "FAILED", message: "Email already exist" });
+    if (isMailExist.length !== 0) {
+      return res.json({
+        status: "FAILED",
+        message: "Email already exist",
+        res: isMailExist,
+      });
     }
 
     // Hash password

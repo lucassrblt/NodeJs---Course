@@ -10,6 +10,7 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [data, setData] = useState("");
   const [allInputAreFilled, setAllInputAreFilled] = useState(true);
   const [passwordsDifferent, setPasswordDifferent] = useState(false);
   const [emailAlreadyExists, setEmailAlreadyExists] = useState(false);
@@ -35,8 +36,10 @@ export default function Register() {
     },
   ];
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleFormSubmit = async (data) => {
+    const email = data["Email"];
+    const password = data["Password"];
+    const confirmPassword = data["Confirm Password"];
     if (email && password && confirmPassword) {
       if (password === confirmPassword) {
         // Envoyer la requete au serveur
@@ -85,7 +88,7 @@ export default function Register() {
           </div>
         </div>
         <div className="form-container">
-          <Form fields={fields} handleSubmit={handleSubmit} page={"Register"} />
+          <Form fields={fields} onSubmit={handleFormSubmit} page={"Register"} />
           <div className="or">
             <div className="line"></div>
             <p>OR</p>
