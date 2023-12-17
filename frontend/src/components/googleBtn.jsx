@@ -1,11 +1,41 @@
 import React from "react";
+import { useGoogleLogin } from "@react-oauth/google";
+import { AuthContext } from "../context/AuthContext";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function GoogleBtn() {
+function GoogleBtn() {
+  const { dispatch } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => googleLoginSuccess(codeResponse),
+    onFailure: (res) => {
+      googleLoginFailure(res);
+    },
+  });
+
+  const googleLoginSuccess = async (response) => {
+    try {
+      const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+        headers: {
+          Authorization: `Bearer ${response.access_token}`,
+        },
+      });
+      const data = await res.json();
+      localStorage.setItem("user", JSON.stringify(data));
+      dispatch({ type: "LOGIN", payload: data });
+      navigate("/home");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <div className="google-login">
         <div className="google-btn">
-          <button>
+          <button onClick={() => login()}>
             <svg
               width="21"
               height="20"
@@ -27,3 +57,5 @@ export default function GoogleBtn() {
     </>
   );
 }
+
+export default GoogleBtn;

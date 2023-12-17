@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function Form({ fields, onSubmit, page }) {
+export default function Form({ fields, onSubmit, page, setError }) {
   const [data, setData] = useState("");
 
   const handleChange = (key, value) => {
@@ -49,7 +49,7 @@ export default function Form({ fields, onSubmit, page }) {
           )}
         </div>
         <div className="submit-btn">
-          <input type="submit" />
+          <input type="submit" className={setError ? "shake" : undefined} />
         </div>
       </form>
     </>

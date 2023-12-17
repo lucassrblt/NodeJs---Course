@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -6,15 +6,12 @@ import sendData from "../functions/sendData.js";
 import Form from "../components/Form.jsx";
 import GoogleBtn from "../components/GoogleBtn.jsx";
 
-export default function Register() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [data, setData] = useState("");
+function Register() {
   const [allInputAreFilled, setAllInputAreFilled] = useState(true);
   const [passwordsDifferent, setPasswordDifferent] = useState(false);
   const [emailAlreadyExists, setEmailAlreadyExists] = useState(false);
   const [internalError, setInternalError] = useState(false);
+  const [error, setError] = useState(false);
 
   const navigate = useNavigate();
 
@@ -88,7 +85,20 @@ export default function Register() {
           </div>
         </div>
         <div className="form-container">
-          <Form fields={fields} onSubmit={handleFormSubmit} page={"Register"} />
+          <Form
+            fields={fields}
+            onSubmit={handleFormSubmit}
+            page={"Register"}
+            setError={error}
+          />
+          {!allInputAreFilled && <p>Please fill all fields</p>}
+          {passwordsDifferent && (
+            <p>Passwords are different, please set exacts passwords</p>
+          )}
+          {emailAlreadyExists && <p>Email already exists</p>}
+          {internalError && (
+            <p>Internal error, please try again later or contact support</p>
+          )}
           <div className="or">
             <div className="line"></div>
             <p>OR</p>
@@ -99,36 +109,6 @@ export default function Register() {
           <GoogleBtn />
         </div>
       </div>
-      {/* <h1>Register</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">
-          Email
-          <input type="mail" onChange={(e) => setEmail(e.target.value)} />
-        </label>
-        <label htmlFor="password">
-          Password
-          <input
-            type="password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
-        <label htmlFor="confirm password">
-          Confirm Password
-          <input
-            type="password"
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-        </label>
-        <input type="submit" />
-        {!allInputAreFilled && <p>Please fill all fields</p>}
-        {passwordsDifferent && (
-          <p>Passwords are different, please set exacts passwords</p>
-        )}
-        {emailAlreadyExists && <p>Email already exists</p>}
-        {internalError && (
-          <p>Internal error, please try again later or contact support</p>
-        )}
-      </form> */}
       <div className="other">
         <div className="terms">
           <p>Terms of use</p>
@@ -141,3 +121,5 @@ export default function Register() {
     </div>
   );
 }
+
+export default Register;
