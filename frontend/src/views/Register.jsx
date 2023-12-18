@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import sendData from "../functions/sendData.js";
 import Form from "../components/Form.jsx";
 import GoogleBtn from "../components/GoogleBtn.jsx";
+import Terms from "../components/Terms.jsx";
 
 function Register() {
   const [allInputAreFilled, setAllInputAreFilled] = useState(true);
@@ -109,15 +110,7 @@ function Register() {
           <GoogleBtn />
         </div>
       </div>
-      <div className="other">
-        <div className="terms">
-          <p>Terms of use</p>
-        </div>
-        <div className="line"></div>
-        <div className="policy">
-          <p>Privacy policy</p>
-        </div>
-      </div>
+      <Terms />
     </div>
   );
 }

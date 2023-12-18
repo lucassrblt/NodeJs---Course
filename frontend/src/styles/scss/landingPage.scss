@@ -1,0 +1,79 @@
+.view-landing {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+.left-part {
+  display: flex;
+  height: 100%;
+  width: 60%;
+  align-items: center;
+  padding-left: 50px;
+  background-color: $darken-purple;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  .tall-txt p {
+    @include font("Poppins", 700, 3.2rem, $main-white);
+    font-size: 3.2rem;
+  }
+
+  .small-txt p {
+    @include font("Poppins", 500, 2.4rem, $main-white);
+  }
+}
+
+.right-part {
+  display: flex;
+  height: 100%;
+  width: 40%;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+
+  .getstarted {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+
+    .title {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .title p {
+      @include font("Poppins", 700, 2.4rem, $main-white);
+    }
+  }
+
+  .btns {
+    display: flex;
+    gap: 60px;
+    height: 40px;
+
+    .btn {
+      display: flex;
+      height: 100%;
+      width: 130px;
+      border-radius: 6px;
+
+      button {
+        border-radius: 6px;
+        outline: none;
+        border: none;
+        width: 100%;
+        height: 100%;
+        background-color: $main-purple;
+        @include font("Poppins", 700, 1.4rem, $main-white);
+      }
+    }
+  }
+}

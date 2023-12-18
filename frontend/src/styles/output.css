@@ -244,10 +244,95 @@
   animation: shake 7s;
 }
 
+.view-landing {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+.left-part {
+  display: flex;
+  height: 100%;
+  width: 60%;
+  align-items: center;
+  padding-left: 50px;
+  background-color: #321a66;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.text .tall-txt p {
+  font-family: "Poppins";
+  font-weight: 700;
+  font-size: 3.2rem;
+  color: #fff;
+  font-size: 3.2rem;
+}
+.text .small-txt p {
+  font-family: "Poppins";
+  font-weight: 500;
+  font-size: 2.4rem;
+  color: #fff;
+}
+
+.right-part {
+  display: flex;
+  height: 100%;
+  width: 40%;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+}
+.right-part .getstarted {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.right-part .getstarted .title {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+.right-part .getstarted .title p {
+  font-family: "Poppins";
+  font-weight: 700;
+  font-size: 2.4rem;
+  color: #fff;
+}
+.right-part .btns {
+  display: flex;
+  gap: 60px;
+  height: 40px;
+}
+.right-part .btns .btn {
+  display: flex;
+  height: 100%;
+  width: 130px;
+  border-radius: 6px;
+}
+.right-part .btns .btn button {
+  border-radius: 6px;
+  outline: none;
+  border: none;
+  width: 100%;
+  height: 100%;
+  background-color: #7e41ff;
+  font-family: "Poppins";
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: #fff;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-size: 10px;
 }
 
 html,

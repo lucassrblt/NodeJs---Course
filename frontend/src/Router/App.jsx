@@ -12,6 +12,7 @@ import Verify from "../views/Verify.jsx";
 import { AuthContextProvider } from "../context/AuthContext.jsx";
 import PrivateRoute from "../views/PrivateRoute.jsx";
 import NotFound from "../views/NotFound.jsx";
+import LandingPage from "../views/LandingPage.jsx";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <BrowserRouter>
         <AuthContextProvider>
           <Routes>
+            <Route path={"/"} element={<LandingPage />} />
             <Route path={"/register"} element={<Register />} />
             <Route path={"/login"} element={<Login />} />
             <Route path={"/verify/:id"} element={<Verify />} />
