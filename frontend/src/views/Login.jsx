@@ -4,6 +4,9 @@ import sendData from "../functions/sendData";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { useGoogleLogin } from "@react-oauth/google";
+import Terms from "../components/Terms";
+import Form from "../components/Form";
+import GoogleBtn from "../components/GoogleBtn";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -12,9 +15,28 @@ export default function Login() {
   const [emailNotFound, setEmailNotFound] = useState(false);
   const [passwordInvalid, setPasswordInvalid] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(true);
+  const [error, setError] = useState(false);
+
   const { dispatch } = useContext(AuthContext);
 
+  const fields = [
+    {
+      label: "Email",
+      type: "email",
+      placeholder: "Enter your email",
+    },
+    {
+      label: "Password",
+      type: "password",
+      placeholder: "Enter your password",
+    },
+  ];
+
   const navigate = useNavigate();
+
+  const handleFormSubmit = () => {
+    console.log("test");
+  };
 
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => googleLoginSuccess(codeResponse),
@@ -76,23 +98,49 @@ export default function Login() {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="">Email</label>
-        <input type="email" onChange={(e) => setEmail(e.target.value)} />
-        <label htmlFor="">Password</label>
-        <input type="password" onChange={(e) => setPassword(e.target.value)} />
-        <input type="submit" />
-      </form>
-      <div className="google-login">
-        <button onClick={() => login()}>Sign in with google</button>
+    <div className="view">
+      <div className="register-container">
+        <div className="title-subtitle">
+          <div className="title">
+            <h2>Log In</h2>
+          </div>
+        </div>
+        <div className="form-container">
+          <Form
+            fields={fields}
+            onSubmit={handleFormSubmit}
+            page={"Login"}
+            setError={error}
+          />
+          <div className="or">
+            <div className="line"></div>
+            <p>OR</p>
+            <div className="line"></div>
+          </div>
+        </div>
+        <div className="google-btn-container">
+          <GoogleBtn />
+        </div>
       </div>
-      {!allInputAreFilled && <h1>Please fill all fields</h1>}
-      {emailNotFound && <h1>Email not found</h1>}
-      {passwordInvalid && <h1>Password invalid</h1>}
-      {!isEmailVerified && <h1>Please verify your email before login</h1>}
+      <Terms />
     </div>
+    //   <div>
+    //     <h1>Login</h1>
+
+    //     <form onSubmit={handleSubmit}>
+    //       <label htmlFor="">Email</label>
+    //       <input type="email" onChange={(e) => setEmail(e.target.value)} />
+    //       <label htmlFor="">Password</label>
+    //       <input type="password" onChange={(e) => setPassword(e.target.value)} />
+    //       <input type="submit" />
+    //     </form>
+    //     <div className="google-login">
+    //       <button onClick={() => login()}>Sign in with google</button>
+    //     </div>
+    //     {!allInputAreFilled && <h1>Please fill all fields</h1>}
+    //     {emailNotFound && <h1>Email not found</h1>}
+    //     {passwordInvalid && <h1>Password invalid</h1>}
+    //     {!isEmailVerified && <h1>Please verify your email before login</h1>}
+    //   </div>
   );
 }
