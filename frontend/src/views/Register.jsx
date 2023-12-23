@@ -92,14 +92,17 @@ function Register() {
             page={"Register"}
             setError={error}
           />
-          {!allInputAreFilled && <p>Please fill all fields</p>}
-          {passwordsDifferent && (
-            <p>Passwords are different, please set exacts passwords</p>
-          )}
-          {emailAlreadyExists && <p>Email already exists</p>}
-          {internalError && (
-            <p>Internal error, please try again later or contact support</p>
-          )}
+          <div className="error">
+            {!allInputAreFilled && <p>Please fill all fields</p>}
+            {passwordsDifferent && (
+              <p>Passwords are different, please set exacts passwords</p>
+            )}
+            {emailAlreadyExists && <p>Email already exists</p>}
+            {internalError && (
+              <p>Internal error, please try again later or contact support</p>
+            )}
+          </div>
+
           <div className="or">
             <div className="line"></div>
             <p>OR</p>

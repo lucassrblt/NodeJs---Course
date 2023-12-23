@@ -50,6 +50,18 @@
   width: 100%;
   gap: 20px;
 
+  .error {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+
+    p,
+    h1 {
+      @include font("Poppins", 400, 12px, $main-red);
+    }
+  }
+
   .form {
     display: flex;
     flex-direction: column;

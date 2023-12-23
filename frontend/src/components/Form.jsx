@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Form({ fields, onSubmit, page, setError }) {
+  const navigate = useNavigate();
   const [data, setData] = useState("");
 
   const handleChange = (key, value) => {
@@ -33,17 +35,14 @@ export default function Form({ fields, onSubmit, page, setError }) {
           {page === "Register" && (
             <>
               <div className="already-register">
-                <p>Already Register ?</p>
+                <p onClick={() => navigate("/login")}>Already Register ?</p>
               </div>
             </>
           )}
           {page === "Login" && (
             <>
-              <div className="forgot-password">
-                <p>Forgot password ?</p>
-              </div>
               <div className="already-register">
-                <p>Not register yet?</p>
+                <p onClick={() => navigate("/register")}>Not register yet?</p>
               </div>
             </>
           )}

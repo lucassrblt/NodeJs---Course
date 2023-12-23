@@ -34,8 +34,38 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  const handleFormSubmit = () => {
-    console.log("test");
+  const handleFormSubmit = async (data) => {
+    setAllInputAreFilled(true);
+    setEmailNotFound(false);
+    setPasswordInvalid(false);
+    setIsEmailVerified(true);
+    const { Email, Password } = data;
+    if (Email && Password) {
+      const data = {
+        email: Email,
+        password: Password,
+      };
+      const response = await sendData(data, "http://localhost:3001/api/login");
+      console.log(response);
+      if (response.status === "FAILED") {
+        if (response.message === "Email not found") {
+          setEmailNotFound(true);
+        }
+        if (response.message === "Password Invalid") {
+          setPasswordInvalid(true);
+        }
+        if (response.message === "Email not verified") {
+          setIsEmailVerified(false);
+        }
+      }
+      if (response.status === "SUCCESS") {
+        localStorage.setItem("user", JSON.stringify(response.user));
+        dispatch({ type: "LOGIN", payload: response.user });
+        navigate("/home");
+      }
+    } else {
+      setAllInputAreFilled(false);
+    }
   };
 
   const login = useGoogleLogin({
@@ -65,38 +95,6 @@ export default function Login() {
     console.log("Login failed res : ", response);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("test");
-    if (email && password) {
-      console.log("test2");
-      const data = {
-        email: email,
-        password: password,
-      };
-      const response = await sendData(data, "http://localhost:3001/api/login");
-      console.log(response);
-      if (response.status === "FAILED") {
-        if (response.message === "Email not found") {
-          setEmailNotFound(true);
-        }
-        if (response.message === "Password Invalid") {
-          setPasswordInvalid(true);
-        }
-        if (response.message === "Email not verified") {
-          setIsEmailVerified(false);
-        }
-      }
-      if (response.status === "SUCCESS") {
-        localStorage.setItem("user", JSON.stringify(response.user));
-        dispatch({ type: "LOGIN", payload: response.user });
-        navigate("/home");
-      }
-    } else {
-      setAllInputAreFilled(false);
-    }
-  };
-
   return (
     <div className="view">
       <div className="register-container">
@@ -112,6 +110,12 @@ export default function Login() {
             page={"Login"}
             setError={error}
           />
+          <div className="error">
+            {!allInputAreFilled && <h1>Please fill all fields</h1>}
+            {emailNotFound && <h1>Email not found</h1>}
+            {passwordInvalid && <h1>Password invalid</h1>}
+            {!isEmailVerified && <h1>Please verify your email before login</h1>}
+          </div>
           <div className="or">
             <div className="line"></div>
             <p>OR</p>
