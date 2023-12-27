@@ -8,7 +8,7 @@ import Terms from "../components/Terms";
 import Form from "../components/Form";
 import GoogleBtn from "../components/GoogleBtn";
 
-export default function Login() {
+function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [allInputAreFilled, setAllInputAreFilled] = useState(true);
@@ -59,40 +59,22 @@ export default function Login() {
         }
       }
       if (response.status === "SUCCESS") {
-        localStorage.setItem("user", JSON.stringify(response.user));
-        dispatch({ type: "LOGIN", payload: response.user });
-        navigate("/home");
+        const responseUser = { ...response.user, type: "LOCAL" };
+        localStorage.setItem("user", JSON.stringify(responseUser));
+        dispatch({ type: "LOGIN", payload: responseUser });
+
+        if (
+          response.user.profile.firstName === null ||
+          response.user.profile.firstName === ""
+        ) {
+          navigate(`/profile/${response.user._id}`);
+        } else {
+          navigate("/home");
+        }
       }
     } else {
       setAllInputAreFilled(false);
     }
-  };
-
-  const login = useGoogleLogin({
-    onSuccess: (codeResponse) => googleLoginSuccess(codeResponse),
-    onFailure: (res) => {
-      googleLoginFailure(res);
-    },
-  });
-
-  const googleLoginSuccess = async (response) => {
-    try {
-      const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-        headers: {
-          Authorization: `Bearer ${response.access_token}`,
-        },
-      });
-      const data = await res.json();
-      localStorage.setItem("user", JSON.stringify(data));
-      dispatch({ type: "LOGIN", payload: data });
-      navigate("/home");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const googleLoginFailure = (response) => {
-    console.log("Login failed res : ", response);
   };
 
   return (
@@ -128,23 +110,7 @@ export default function Login() {
       </div>
       <Terms />
     </div>
-    //   <div>
-    //     <h1>Login</h1>
-
-    //     <form onSubmit={handleSubmit}>
-    //       <label htmlFor="">Email</label>
-    //       <input type="email" onChange={(e) => setEmail(e.target.value)} />
-    //       <label htmlFor="">Password</label>
-    //       <input type="password" onChange={(e) => setPassword(e.target.value)} />
-    //       <input type="submit" />
-    //     </form>
-    //     <div className="google-login">
-    //       <button onClick={() => login()}>Sign in with google</button>
-    //     </div>
-    //     {!allInputAreFilled && <h1>Please fill all fields</h1>}
-    //     {emailNotFound && <h1>Email not found</h1>}
-    //     {passwordInvalid && <h1>Password invalid</h1>}
-    //     {!isEmailVerified && <h1>Please verify your email before login</h1>}
-    //   </div>
   );
 }
+
+export default Login;

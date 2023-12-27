@@ -22,7 +22,7 @@ function GoogleBtn() {
           Authorization: `Bearer ${response.access_token}`,
         },
       });
-      const data = await res.json();
+      const data = { ...(await res.json()), type: "GOOGLE" };
       localStorage.setItem("user", JSON.stringify(data));
       dispatch({ type: "LOGIN", payload: data });
       navigate("/home");

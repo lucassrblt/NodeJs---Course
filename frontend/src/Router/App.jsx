@@ -13,6 +13,7 @@ import { AuthContextProvider } from "../context/AuthContext.jsx";
 import PrivateRoute from "../views/PrivateRoute.jsx";
 import NotFound from "../views/NotFound.jsx";
 import LandingPage from "../views/LandingPage.jsx";
+import Profile from "../views/Profile.jsx";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path={"/register"} element={<Register />} />
             <Route path={"/login"} element={<Login />} />
             <Route path={"/verify/:id"} element={<Verify />} />
+            <Route path={"/profile/:id"} element={<Profile />} />
             <Route element={<PrivateRoute />}>
               <Route path={"/home"} element={<Home />} />
             </Route>

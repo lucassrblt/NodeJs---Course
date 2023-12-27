@@ -55,7 +55,7 @@ function Register() {
 
         if (userData.status === "PENDING") {
           localStorage.setItem("userData", JSON.stringify(userData));
-          navigate("/login");
+          navigate(`/profile/${userData.data.userId}`);
         }
 
         if (userData.status === "FAILED") {

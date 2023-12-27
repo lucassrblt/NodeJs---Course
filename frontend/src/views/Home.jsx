@@ -6,10 +6,20 @@ function Home() {
   const [user, setUser] = useState({});
 
   useEffect(() => {
-    console.log("test");
     const user = JSON.parse(localStorage.getItem("user"));
-    setUser(user);
-    console.log(user);
+    if (user.type === "LOCAL") {
+      console.log(user);
+      setUser({
+        name: user.profile.firstName + " " + user.profile.lastName,
+        picture: `http://localhost:3001/uploads/${user["profile"]["profilePicture"]}`,
+      });
+    } else {
+      console.log("test");
+      setUser({
+        name: user.name,
+        picture: user.picture,
+      });
+    }
   }, []);
 
   return (
@@ -18,7 +28,7 @@ function Home() {
         <div className="nav">
           <div>
             <a href="https://github.com/lucassrblt">
-              <p>@lucassrblt</p>
+              <p>coded by @lucassrblt</p>
             </a>
             <div className="svg">
               <svg

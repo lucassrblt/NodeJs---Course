@@ -14,6 +14,9 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  profile: {
+    type: Object,
+  },
 });
 
 const user = mongoose.model("user", userSchema);

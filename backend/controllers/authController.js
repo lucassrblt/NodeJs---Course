@@ -1,8 +1,11 @@
 const user = require("../models/user");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
+const multer = require("multer");
 const dotenv = require("dotenv");
 const jwt = require("jsonwebtoken");
+
+const upload = multer({ dest: "uploads/" });
 
 //Create json web token
 const createToken = (_id) => {
@@ -49,6 +52,11 @@ module.exports.register = async (req, res) => {
       email: email,
       password: hashedPassword,
       verified: false,
+      profile: {
+        firstName: "",
+        lastName: "",
+        profilePicture: "",
+      },
     });
 
     //Save user un bdd
@@ -168,6 +176,7 @@ module.exports.login = async (req, res) => {
       user: {
         _id: userCollection._id,
         email: userCollection.email,
+        profile: userCollection.profile,
         token: token,
       },
     });
@@ -175,5 +184,29 @@ module.exports.login = async (req, res) => {
     res
       .status(500)
       .json({ status: "FAILED", message: "Internal Server Error" });
+  }
+};
+
+module.exports.userProfile = async (req, res) => {
+  const { id, firstName, lastName } = req.body;
+  const fileValue = req.file;
+  console.log(fileValue);
+  // console.log(req.body.id);
+  // console.log(req.body.firstName);
+  // console.log(req.body.lastName);
+  // console.log(req.body.fileValue);
+  if (id && firstName && lastName && fileValue) {
+    try {
+      const userCollection = await user.findByIdAndUpdate(id, {
+        profile: {
+          firstName,
+          lastName,
+          profilePicture: fileValue.filename,
+        },
+      });
+      res.json({ status: "SUCCESS", message: "User updated" });
+    } catch (error) {
+      console.log(error);
+    }
   }
 };
